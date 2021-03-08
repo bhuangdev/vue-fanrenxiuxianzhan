@@ -11,41 +11,39 @@
     <div class="bottom">
       <main class="middle-content">
         <div class="content-top">
-          <el-button class="studyBtn">学习</el-button>
-          <el-button class="workBtn">工作</el-button>
-          <el-button class="lifeBtn">生活</el-button>
-          <el-button class="enjoyBtn">娱乐</el-button>
+          <el-button class="studyBtn" @click="changeContent('study')">学习</el-button>
+          <el-button class="workBtn" @click="changeContent('work')">工作</el-button>
+          <el-button class="lifeBtn" @click="changeContent('life')">生活</el-button>
+          <el-button class="enjoyBtn" @click="changeContent('enjoy')">娱乐</el-button>
         </div>
         <div class="content-middle">
           <div class="studyContent" v-if="studyShow">
-            <el-row :gutter="20">
-              <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
-              <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
-              <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
-              <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
-              <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
-              <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
-              <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <el-col :span="12"><div class="grid-content-bottom bg-purple"></div></el-col>
-              <el-col :span="12"><div class="grid-content-bottom bg-purple"></div></el-col>
-            </el-row>
-            <el-row :gutter="20">
-              <div class="useBtn">
-                <el-button class="editBtn">编辑</el-button>
-                <el-button class="saveBtn">保存</el-button>
-                <el-button class="cancelBtn">取消</el-button>
-                <el-button class="exportBtn">导出</el-button>
-              </div>
-            </el-row>
+            <el-form ref="studyform" :model="studyForm" label-width="20px">
+              <el-row :gutter="20">
+                <el-col :span="12"><div class="grid-content bg-purple"></div></el-col>
+                <el-col :span="12"><div class="grid-content bg-purple"></div></el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12"><div class="grid-content bg-purple"></div></el-col>
+                <el-col :span="12"><div class="grid-content bg-purple"></div></el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12"><div class="grid-content-bottom bg-purple"></div></el-col>
+                <el-col :span="12"><div class="grid-content-bottom bg-purple"></div></el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <div class="useBtn">
+                  <el-button class="editBtn">编辑</el-button>
+                  <el-button class="saveBtn">保存</el-button>
+                  <el-button class="cancelBtn">取消</el-button>
+                  <el-button class="exportBtn">导出</el-button>
+                </div>
+              </el-row>
+            </el-form>
           </div>
-          <div class="workContent" v-if="workShow"></div>
-          <div class="lifeContent" v-if="lifeShow"></div>
-          <div class="enjoyContent" v-if="enjoyShow"></div>
+          <div class="workContent" v-if="workShow">工作</div>
+          <div class="lifeContent" v-if="lifeShow">生活</div>
+          <div class="enjoyContent" v-if="enjoyShow">娱乐</div>
         </div>
         <div class="content-bottom">
             © 2021 Powered by HB  
@@ -94,6 +92,33 @@
             </div>
           </div>
         </div>
+        <div class="important-date-title">- 重要日期</div>
+        <div class="important-date">
+          <el-form ref="form" :model="importantDate" label-width="20px">
+            <el-form-item label="1.">
+              <el-input v-model="importantDate.date1"></el-input>
+            </el-form-item>
+            <el-form-item label="2.">
+              <el-input v-model="importantDate.date2"></el-input>
+            </el-form-item>
+            <el-form-item label="3.">
+              <el-input v-model="importantDate.date3"></el-input>
+            </el-form-item>
+            <el-form-item label="4.">
+              <el-input v-model="importantDate.date4"></el-input>
+            </el-form-item>
+            <el-form-item label="5.">
+              <el-input v-model="importantDate.date5"></el-input>
+            </el-form-item>
+            <el-form-item label="6.">
+              <el-input v-model="importantDate.date6"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSubmitImportantDate(importantDate._id)">保存</el-button>
+              <el-button @click="initImportantDateData">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
       </aside>
     </div>
   </div>
@@ -101,7 +126,7 @@
 
 <script>
 import $ from 'jquery';
-var appData = require('../../hotSearch.json');
+var appData = require('../../server/hotSearch.json');
 
 export default {
   name: 'Index',
@@ -117,17 +142,84 @@ export default {
       studyShow: true,
       workShow: false,
       lifeShow:false,
-      enjoyShow:false
+      enjoyShow:false,
+      importantDate:{
+        _id:'',
+        date1:'',
+        date2:'',
+        date3:'',
+        date4:'',
+        date5:'',
+        date6:''
+      }
     }
   },
   created(){
-    
+    this.initImportantDateData();
   },
   mounted(){
     this.showClock();
     this.newtime();
   },
   methods:{
+    initImportantDateData(){
+      this.$http.get('importantDate').then(res => {
+        this.importantDate = res.data[0];
+      })
+    },
+    onSubmitImportantDate(param){
+      debugger
+      if(param !== ''){
+        this.$http.delete(`importantDate/${param}`).then(res => {
+          this.$http.post('importantDate',this.importantDate).then(res => {
+            console.log(res.data)
+            this.$message({
+              message: '保存成功！',
+              type: 'success'
+            });
+            this.initImportantDateData();
+          })
+        })
+      }else{
+        this.$http.post('importantDate',this.importantDate).then(res => {
+          console.log(res.data)
+          this.$message({
+            message: '保存成功！',
+            type: 'success'
+          });
+          this.initImportantDateData();
+        })
+      }
+    },
+    changeContent(param){
+      switch(param){
+        case 'study':
+          this.studyShow = true;
+          this.workShow = false;
+          this.lifeShow = false;
+          this.enjoyShow = false;
+          break;
+        case 'work':
+          this.studyShow = false;
+          this.workShow = true;
+          this.lifeShow = false;
+          this.enjoyShow = false;
+          break;
+        case 'life':
+          this.studyShow = false;
+          this.workShow = false;
+          this.lifeShow = true;
+          this.enjoyShow = false;
+          break;
+        case 'enjoy':
+          this.studyShow = false;
+          this.workShow = false;
+          this.lifeShow = false;
+          this.enjoyShow = true;
+          break;
+      }
+      
+    },
     showClock(){
       var clock = document.getElementById("clock");
       function initNumXY(){
@@ -192,7 +284,6 @@ export default {
     newtime() {
       let date = this.formatDate(new Date());
       this.datetime = date;
-      debugger
       this.hdnongli();
     },
     formatDate: function (date) {
@@ -204,7 +295,6 @@ export default {
       return formatdatetime;				
     },
     hdnongli() {
-      debugger
       var CalendarData = new Array(100);
       var madd = new Array(12);
       var tgString = "甲乙丙丁戊己庚辛壬癸";
@@ -592,5 +682,25 @@ export default {
   .useBtn{
     display: flex;
     margin-left: 20px;
+  }
+
+  .important-date{
+    margin:20px 20px 10px 10px;
+    width:91%;
+    height:500px;
+    display: flex;
+  }
+
+  .important-date-title{
+    margin:20px 0 10px 20px;
+    text-align: left;
+    font-size:25px;
+  }
+
+  /deep/ .el-input__inner{
+    border:0px;
+  }
+  /deep/ .el-input__inner:focus{
+    border:1px solid #DCDFE6;
   }
 </style>

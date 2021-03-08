@@ -14,8 +14,12 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.5",
+    "cors": "^2.8.5",
     "element-ui": "^2.15.1",
+    "express": "^5.0.0-alpha.8",
+    "mongoose": "^5.11.19",
     "request": "^2.88.2",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
