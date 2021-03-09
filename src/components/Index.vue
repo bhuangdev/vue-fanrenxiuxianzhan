@@ -18,7 +18,7 @@
         </div>
         <div class="content-middle">
           <div class="studyContent" v-if="studyShow">
-            <el-form ref="studyform" :model="studyForm" label-width="20px">
+            <!-- <el-form ref="studyform" :model="studyForm" label-width="20px"> -->
               <el-row :gutter="20">
                 <el-col :span="12"><div class="grid-content bg-purple"></div></el-col>
                 <el-col :span="12"><div class="grid-content bg-purple"></div></el-col>
@@ -39,11 +39,58 @@
                   <el-button class="exportBtn">导出</el-button>
                 </div>
               </el-row>
-            </el-form>
+            <!-- </el-form> -->
           </div>
           <div class="workContent" v-if="workShow">工作</div>
           <div class="lifeContent" v-if="lifeShow">生活</div>
-          <div class="enjoyContent" v-if="enjoyShow">娱乐</div>
+          <div class="enjoyContent" v-if="enjoyShow">
+            <div class="container">
+              <div index_roll="1">看剧</div>
+              <div index_roll="2">看番</div>
+              <div index_roll="3">看直播</div>
+              <div index_roll="0">思考人生</div>
+              <div index_roll="8">
+                  <el-button @click="changeSelect('start')">开始</el-button>
+                  <el-button @click="changeSelect('end')">停止</el-button>
+              </div>
+              <div index_roll="4">玩游戏</div>
+              <div index_roll="7">音乐</div>
+              <div index_roll="6">画画</div>
+              <div index_roll="5">滚去学习</div>
+            </div>
+            <div>
+              <el-button @click="transToRight()" class="transBtn">===></el-button>
+            </div>
+            <div class="toDoTable">
+              <el-table
+                :data="toDoTableData"
+                border
+                style="width: 100%"
+                >
+                <el-table-column
+                  type="index"
+                  width="50">
+                </el-table-column>
+                <el-table-column
+                  prop="time"
+                  label="时长"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="content"
+                  label="内容"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  label="操作" width="85">
+                  <template slot-scope="scope">
+                    <el-button size="mini" @click="handleEdit(scope.row)">Go</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div style="margin:10px 0 0 -300px;">{{ timeAttention }}</div>
+            </div>
+          </div>
         </div>
         <div class="content-bottom">
             © 2021 Powered by HB  
@@ -119,6 +166,16 @@
             </el-form-item>
           </el-form>
         </div>
+        <div class="notes">
+            <!-- <el-input
+              type="textarea"
+              :rows="2"
+              placeholder="请输入内容"
+              v-model="textarea">
+            </el-input> -->
+        </div>
+        
+        
       </aside>
     </div>
   </div>
@@ -151,7 +208,13 @@ export default {
         date4:'',
         date5:'',
         date6:''
-      }
+      },
+      studyForm:[],
+      currentTimeId:'',
+      toDoTableData:[],
+      timeAttention:'注： 1h <= 总时长 <= 3h',
+      currentDo:'',
+      textarea:''
     }
   },
   created(){
@@ -410,6 +473,59 @@ export default {
       }
       this.nongli = showCal();
       this.currentDate =  this.datetime + " " + this.nongli;
+    },
+    changeSelect(param){
+      var divs = document.querySelectorAll(".container>div")
+      var timeId = null;
+      var index = 0;
+      if(param == 'start'){
+        clearInterval(timeId);
+        timeId = setInterval(() => {
+          for (var j = 0; j < divs.length; j++) {
+              divs[j].style.backgroundColor = "white";
+          }
+          for (var i = 0; i < divs.length; i++) {
+              if (Number(divs[i].getAttribute("index_roll")) == index%8) {
+                  divs[i].style.backgroundColor = "grey";
+                  break;
+              }
+          }
+          index++;
+        }, 30);
+        this.currentTimeId = timeId;
+      }else{
+        clearInterval(this.currentTimeId);
+        divs.forEach(element=>{
+          if(element.style.backgroundColor == "grey"){
+            this.currentDo = element.innerText;
+            console.log(this.currentDo);
+          }
+        })
+        
+        
+      }
+
+    },
+    transToRight(){
+      var currentLink = "";
+      if(this.currentDo == "看剧"){
+        currentLink = "https://v.qq.com/channel/tv";
+      }else if(this.currentDo == "看番"){
+        currentLink = "https://www.bilibili.com/";
+      }else if(this.currentDo == "看直播"){
+        currentLink = "https://www.douyu.com/71415";
+      }else{
+        currentLink = "";
+      }
+      var data = {
+        time:'30min',
+        content: this.currentDo,
+        link: currentLink
+      }
+      this.toDoTableData.push(data);
+    },
+    handleEdit(param){
+      window.open(param.link);
     }
   }
 }
@@ -663,6 +779,9 @@ export default {
     height:95%;
   }
 
+  .enjoyContent{
+    display:flex;
+  }
 
   .bg-purple {
     background: #d3dce6;
@@ -687,7 +806,7 @@ export default {
   .important-date{
     margin:20px 20px 10px 10px;
     width:91%;
-    height:500px;
+    height:300px;
     display: flex;
   }
 
@@ -702,5 +821,49 @@ export default {
   }
   /deep/ .el-input__inner:focus{
     border:1px solid #DCDFE6;
+  }
+
+  * {
+      margin: 0;
+      padding: 0;
+  }
+
+  .container {
+    margin: 50px 0 0 50px;
+    width: 500px;
+    height: 500px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .container>div {
+    width: 150px;
+    height: 150px;
+    background-color: #fff;
+    color: #000;
+    text-align: center;
+    line-height: 150px;
+    box-shadow:0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  }
+
+  .transBtn{
+    margin: 260px 0 0 30px;
+    width:120px;
+    height:70px;
+  }
+
+  .toDoTable{
+    margin: 120px 0 0 30px;
+  }
+
+  button {
+    width: 60px;
+    height: 30px;
+  }
+
+  .notes{
+    margin:5px 0 0 5px;
   }
 </style>
