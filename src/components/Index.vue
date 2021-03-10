@@ -20,28 +20,161 @@
           <div class="studyContent" v-if="studyShow">
             <!-- <el-form ref="studyform" :model="studyForm" label-width="20px"> -->
               <el-row :gutter="20">
-                <el-col :span="12"><div class="grid-content bg-purple"></div></el-col>
-                <el-col :span="12"><div class="grid-content bg-purple"></div></el-col>
+                <el-col :span="12">
+                  <div class="grid-content bg-purple">
+                    今日目标(日):
+                    <div class="goalContent">
+                      <el-input v-model="todayGoal"></el-input>
+                    </div>
+                  </div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="grid-content bg-purple">
+                    中期目标(月):
+                    <div class="goalContent">
+                      <el-input v-model="monthGoal"></el-input>
+                    </div>
+                  </div>
+                </el-col>
               </el-row>
               <el-row :gutter="20">
-                <el-col :span="12"><div class="grid-content bg-purple"></div></el-col>
-                <el-col :span="12"><div class="grid-content bg-purple"></div></el-col>
+                <el-col :span="12">
+                  <div class="grid-content bg-purple">
+                    近期目标(周):
+                    <div class="goalContent">
+                      <el-input v-model="weekGoal"></el-input>
+                    </div>
+                  </div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="grid-content bg-purple">
+                    长期目标(年):
+                    <div class="goalContent">
+                      <el-input v-model="yearGoal"></el-input>
+                    </div>
+                  </div>
+                </el-col>
               </el-row>
               <el-row :gutter="20">
-                <el-col :span="12"><div class="grid-content-bottom bg-purple"></div></el-col>
-                <el-col :span="12"><div class="grid-content-bottom bg-purple"></div></el-col>
+                <el-col :span="12">
+                  <div class="grid-content-bottom bg-purple">
+                    <div class="bottomTitle">知识(知):</div>
+                    <el-table
+                      :data="knowledgeData" border style="width: 100%">
+                      <el-table-column
+                        prop="date"
+                        label="内容"
+                        width="220">
+                        <template slot-scope="scope">
+                          <el-input class="rowHeight" v-model="scope.row.content1"></el-input>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="name"
+                        label="状态">
+                        <template slot-scope="scope">
+                          <el-select class="rowHeight" v-model="scope.row.state1">
+                            <el-option
+                              v-for="item in studyOptions"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                          </el-select>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="address"
+                        label="内容"
+                        width="220">
+                        <template slot-scope="scope">
+                          <el-input class="rowHeight" v-model="scope.row.content2"></el-input>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="address"
+                        label="状态">
+                        <template slot-scope="scope">
+                          <el-select class="rowHeight" v-model="scope.row.state2">
+                            <el-option
+                              v-for="item in studyOptions"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                          </el-select>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="grid-content-bottom bg-purple">
+                    <div class="bottomTitle">技能(行):</div>
+                    <el-table
+                      :data="actionData" border style="width: 100%;">
+                      <el-table-column
+                        prop="date"
+                        label="内容"
+                        width="220">
+                        <template slot-scope="scope">
+                          <el-input class="rowHeight" v-model="scope.row.content3"></el-input>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="name"
+                        label="状态">
+                        <template slot-scope="scope">
+                          <el-select class="rowHeight" v-model="scope.row.state3">
+                            <el-option
+                              v-for="item in studyOptions"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                          </el-select>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="address"
+                        label="内容"
+                        width="220">
+                        <template slot-scope="scope">
+                          <el-input class="rowHeight" v-model="scope.row.content4"></el-input>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        prop="address"
+                        label="状态">
+                        <template slot-scope="scope">
+                          <el-select class="rowHeight" v-model="scope.row.state4">
+                            <el-option
+                              v-for="item in studyOptions"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                          </el-select>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </div>
+                </el-col>
               </el-row>
               <el-row :gutter="20">
                 <div class="useBtn">
-                  <el-button class="editBtn">编辑</el-button>
-                  <el-button class="saveBtn">保存</el-button>
-                  <el-button class="cancelBtn">取消</el-button>
-                  <el-button class="exportBtn">导出</el-button>
+                  <el-button v-if="rightBtnShow" class="editBtn">编辑</el-button>
+                  <el-button v-if="rightBtnShow" class="saveBtn">保存</el-button>
+                  <el-button v-if="rightBtnShow" class="cancelBtn">取消</el-button>
+                  <el-button v-if="rightBtnShow" class="exportBtn">导出</el-button>
+                  <el-button type="text" @click="changeShowState">{{ hideOrShow }}</el-button>
                 </div>
               </el-row>
             <!-- </el-form> -->
           </div>
-          <div class="workContent" v-if="workShow">工作</div>
+          <div class="workContent" v-if="workShow">
+
+          </div>
           <div class="lifeContent" v-if="lifeShow">生活</div>
           <div class="enjoyContent" v-if="enjoyShow">
             <div class="container">
@@ -59,7 +192,7 @@
               <div index_roll="5">滚去学习</div>
             </div>
             <div>
-              <el-button @click="transToRight()" class="transBtn">===></el-button>
+              <el-button @click="transToRight()" class="transBtn">Go</el-button>
             </div>
             <div class="toDoTable">
               <el-table
@@ -97,7 +230,7 @@
         </div>
       </main>
       <nav class="middle-left">
-        <div class="left-top-title">- 时事新闻</div>
+        <div class="left-top-title">时事新闻</div>
         <div class="left-top-content">
           <div v-for="item in newItems" :key="item.index">
             <a :href="item.link" target="_blank">{{ item.index }}. {{ item.text }}</a>
@@ -139,7 +272,7 @@
             </div>
           </div>
         </div>
-        <div class="important-date-title">- 重要日期</div>
+        <div class="important-date-title">重要日期</div>
         <div class="important-date">
           <el-form ref="form" :model="importantDate" label-width="20px">
             <el-form-item label="1.">
@@ -160,22 +293,21 @@
             <el-form-item label="6.">
               <el-input v-model="importantDate.date6"></el-input>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSubmitImportantDate(importantDate._id)">保存</el-button>
-              <el-button @click="initImportantDateData">取消</el-button>
-            </el-form-item>
           </el-form>
         </div>
         <div class="notes">
-            <!-- <el-input
-              type="textarea"
-              :rows="2"
-              placeholder="请输入内容"
-              v-model="textarea">
-            </el-input> -->
-        </div>
-        
-        
+          <el-input
+            type="textarea"
+            :rows="10"
+            placeholder="Notes"
+            v-model="textarea">
+          </el-input>
+          <div class="saveTwoBtn">
+            <el-button v-if="rightBtnShow" type="primary" @click="onSubmitImportantDate(importantDate._id)">保存</el-button>
+            <el-button v-if="rightBtnShow" @click="initImportantDateData">取消</el-button>
+            <el-button type="text" @click="changeShowState">{{ hideOrShow }}</el-button>
+          </div>
+        </div> 
       </aside>
     </div>
   </div>
@@ -214,7 +346,79 @@ export default {
       toDoTableData:[],
       timeAttention:'注： 1h <= 总时长 <= 3h',
       currentDo:'',
-      textarea:''
+      textarea:'',
+      hideOrShow:'show',
+      rightBtnShow:false,
+      todayGoal:'',
+      monthGoal:'',
+      weekGoal:'',
+      yearGoal:'',
+      knowledgeData:[
+        {
+          content1:'',
+          state1:'',
+          content2:'',
+          state2:'',
+        },
+        {
+          content1:'',
+          state1:'',
+          content2:'',
+          state2:'',
+        },
+        {
+          content1:'',
+          state1:'',
+          content2:'',
+          state2:'',
+        },
+        {
+          content1:'',
+          state1:'',
+          content2:'',
+          state2:'',
+        }
+      ],
+      actionData:[
+        {
+          content3:'',
+          state3:'',
+          content4:'',
+          state4:'',
+        },
+        {
+          content3:'',
+          state3:'',
+          content4:'',
+          state4:'',
+        },
+        {
+          content3:'',
+          state3:'',
+          content4:'',
+          state4:'',
+        },
+        {
+          content3:'',
+          state3:'',
+          content4:'',
+          state4:'',
+        }
+      ],
+      studyOptions:[
+        {
+          value:'未完成',
+          label:'未完成'
+        },
+        {
+          value:'进行中',
+          label:'进行中'
+        },
+        {
+          value:'已完成',
+          label:'已完成'
+        }
+      ]
     }
   },
   created(){
@@ -231,7 +435,6 @@ export default {
       })
     },
     onSubmitImportantDate(param){
-      debugger
       if(param !== ''){
         this.$http.delete(`importantDate/${param}`).then(res => {
           this.$http.post('importantDate',this.importantDate).then(res => {
@@ -252,6 +455,15 @@ export default {
           });
           this.initImportantDateData();
         })
+      }
+    },
+    changeShowState(){
+      if(this.rightBtnShow){
+        this.rightBtnShow = false;
+        this.hideOrShow = "show";
+      }else{
+        this.rightBtnShow = true;
+        this.hideOrShow = "hide";
       }
     },
     changeContent(param){
@@ -597,16 +809,16 @@ export default {
   }
 
   .left-top-title{
-    margin:10px 0 10px 10px;
+    margin:10px 0 10px 20px;
     text-align: left;
     font-size:25px;
   }
   .left-top-content{
-    margin:10px 0 10px 10px;
+    margin:10px 0 10px 15px;
     text-align: left;
     font-size:15px;
     height:700px;
-    width:90%;
+    width:86%;
     overflow: hidden;
     line-height: 1.5em;
   }
@@ -749,13 +961,12 @@ export default {
 
 
   .content-top{
-    margin:10px 10px 10px 10px;
+    margin:0 10px 10px 10px;
     height:20%;
   }
   .studyBtn,.workBtn,.lifeBtn,.enjoyBtn{
-    width:250px;
-    height:150px;
-    margin:10px 50px 20px 50px;
+    width:340px;
+    height:160px;
     box-shadow:0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     font-size:40px;
     font-weight:bold;
@@ -784,13 +995,15 @@ export default {
   }
 
   .bg-purple {
-    background: #d3dce6;
+
   }
 
   .grid-content {
     border-radius: 4px;
     min-height: 70px;
     margin: 10px 5px 10px 5px;
+    text-align:left;
+    font-size:18px;
   }
   .grid-content-bottom{
     border-radius: 4px;
@@ -806,7 +1019,7 @@ export default {
   .important-date{
     margin:20px 20px 10px 10px;
     width:91%;
-    height:300px;
+    height:240px;
     display: flex;
   }
 
@@ -816,10 +1029,10 @@ export default {
     font-size:25px;
   }
 
-  /deep/ .el-input__inner{
+  div /deep/ .el-input__inner{
     border:0px;
   }
-  /deep/ .el-input__inner:focus{
+  div /deep/ .el-input__inner:focus{
     border:1px solid #DCDFE6;
   }
 
@@ -864,6 +1077,32 @@ export default {
   }
 
   .notes{
-    margin:5px 0 0 5px;
+    margin:0 10px 10px 10px;
   }
+
+  .saveTwoBtn{
+    margin-top:15px;
+    float:left;
+  }
+
+  .goalContent{
+    width:540px;
+    margin-left:120px;
+  }
+
+  .bottomTitle{
+    font-size:20px;
+    margin-bottom:10px;
+    text-align: left;
+  }
+
+  div /deep/ .rowHeight el-input__inner{
+    height:20px !important;
+    text-align:center
+  }
+
+  .el-select-dropdown__item{
+    text-align:center;
+  }
+
 </style>
