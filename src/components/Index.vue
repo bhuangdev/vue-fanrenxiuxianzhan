@@ -21,7 +21,7 @@
             <!-- <el-form ref="studyform" :model="studyForm" label-width="20px"> -->
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <div class="grid-content bg-purple">
+                  <div class="grid-content">
                     今日目标(日):
                     <div class="goalContent">
                       <el-input v-model="todayGoal"></el-input>
@@ -29,7 +29,7 @@
                   </div>
                 </el-col>
                 <el-col :span="12">
-                  <div class="grid-content bg-purple">
+                  <div class="grid-content">
                     中期目标(月):
                     <div class="goalContent">
                       <el-input v-model="monthGoal"></el-input>
@@ -39,7 +39,7 @@
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <div class="grid-content bg-purple">
+                  <div class="grid-content">
                     近期目标(周):
                     <div class="goalContent">
                       <el-input v-model="weekGoal"></el-input>
@@ -47,7 +47,7 @@
                   </div>
                 </el-col>
                 <el-col :span="12">
-                  <div class="grid-content bg-purple">
+                  <div class="grid-content">
                     长期目标(年):
                     <div class="goalContent">
                       <el-input v-model="yearGoal"></el-input>
@@ -57,7 +57,7 @@
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <div class="grid-content-bottom bg-purple">
+                  <div class="grid-content-bottom">
                     <div class="bottomTitle">知识(知):</div>
                     <el-table
                       :data="knowledgeData" border style="width: 100%">
@@ -109,7 +109,7 @@
                   </div>
                 </el-col>
                 <el-col :span="12">
-                  <div class="grid-content-bottom bg-purple">
+                  <div class="grid-content-bottom">
                     <div class="bottomTitle">技能(行):</div>
                     <el-table
                       :data="actionData" border style="width: 100%;">
@@ -173,9 +173,228 @@
             <!-- </el-form> -->
           </div>
           <div class="workContent" v-if="workShow">
-
+            <el-row :gutter="20">
+              <el-col :span="24">
+                <div class="workTop">
+                  <div class="todayContentTitle">Today Plan:</div>
+                  <div>
+                    <el-input class="todayContent" v-model="todayContent"></el-input>
+                  </div>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row :gutter="20" class="workContentBottom">
+              <el-col class="workBottom" :span="6">
+                <el-input
+                  v-model="newToDo"
+                  clearable
+                  class="newTaskContent"
+                ></el-input>
+                <el-button
+                  type="primary"
+                  class="newTask"
+                  @click="addTask"
+                  >+ New Task</el-button
+                >
+                <el-button
+                  type="primary"
+                  class="cleanTask"
+                  @click="cleanAllTask"
+                  >Clean All Task</el-button
+                >
+                <div class="useLink">
+                  <div v-for="item in linkItems" :key="item.content" style="text-align:left;">
+                    <a :href="item.link" target="_blank" style="font-size:20px;">{{item.content}}</a>
+                  </div>
+                </div>
+                <el-button style="width:320px;height:50px;">导出</el-button>
+              </el-col>
+              <el-col class="workBottom" :span="6">
+                <Kanban
+                  :key="1"
+                  :list="list1"
+                  :group="group"
+                  class="kanban todo"
+                  header-text="Todo"
+                />
+              </el-col>
+              <el-col class="workBottom" :span="6">
+                <Kanban
+                  :key="2"
+                  :list="list2"
+                  :group="group"
+                  class="kanban working"
+                  header-text="Working"
+                />
+              </el-col>
+              <el-col class="workBottom" :span="6">
+                <Kanban
+                  :key="3"
+                  :list="list3"
+                  :group="group"
+                  class="kanban done"
+                  header-text="Done"
+                />
+              </el-col>
+            </el-row>
           </div>
-          <div class="lifeContent" v-if="lifeShow">生活</div>
+          <div class="lifeContent" v-if="lifeShow">
+            <el-tabs :tab-position="tabPosition" style="height: 500px;" >
+              <el-tab-pane label="衣">
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <div class="grid-content" id="chun">
+                      <el-input
+                        type="textarea"
+                        :rows="10"
+                        placeholder="春"
+                        v-model="textarea1">
+                      </el-input>
+                    </div>
+                  </el-col>
+                  <el-col :span="12">
+                    <div class="grid-content" id="xia">
+                      <el-input
+                        type="textarea"
+                        :rows="10"
+                        placeholder="夏"
+                        v-model="textarea2">
+                      </el-input>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <div class="grid-content" id="qiu">
+                      <el-input
+                        type="textarea"
+                        :rows="10"
+                        placeholder="秋"
+                        v-model="textarea3">
+                      </el-input>
+                    </div>
+                  </el-col>
+                  <el-col :span="12">
+                    <div class="grid-content" id="dong">
+                      <el-input
+                        type="textarea"
+                        :rows="10"
+                        placeholder="冬"
+                        v-model="textarea4">
+                      </el-input>
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-tab-pane>
+              <el-tab-pane label="食">
+                <el-row>
+                  <el-col :span="24">
+                    <div class="grid-content">
+                      <el-input
+                        type="textarea"
+                        :rows="3"
+                        placeholder="早餐"
+                        v-model="textarea5">
+                      </el-input>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="24">
+                    <div class="grid-content">
+                      <el-input
+                        type="textarea"
+                        :rows="3"
+                        placeholder="午餐"
+                        v-model="textarea6">
+                      </el-input>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="24">
+                    <div class="grid-content">
+                      <el-input
+                        type="textarea"
+                        :rows="3"
+                        placeholder="晚餐"
+                        v-model="textarea7">
+                      </el-input>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="24">
+                    <div class="grid-content">
+                      <el-input
+                        type="textarea"
+                        :rows="3"
+                        placeholder="加餐"
+                        v-model="textarea8">
+                      </el-input>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="24">
+                    <div class="grid-content">
+                      <el-input
+                        type="textarea"
+                        :rows="3"
+                        placeholder="运动"
+                        v-model="textarea9">
+                      </el-input>
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-tab-pane>
+              <el-tab-pane label="住">
+                <el-row>
+                  <el-col :span="24">
+                    <div class="grid-content">
+                      <el-input
+                        type="textarea"
+                        :rows="22"
+                        placeholder="居住计划"
+                        v-model="textarea10">
+                      </el-input>
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-tab-pane>
+              <el-tab-pane label="行">
+                <el-row>
+                  <el-col :span="12">
+                    <div class="grid-content">
+                      <el-input
+                        type="textarea"
+                        :rows="22"
+                        placeholder="旅行计划"
+                        v-model="textarea11">
+                      </el-input>
+                    </div>
+                  </el-col>
+                  <el-col :span="12">
+                    <div class="grid-content">
+                      <el-input
+                        type="textarea"
+                        :rows="22"
+                        placeholder="社交计划"
+                        v-model="textarea12">
+                      </el-input>
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-tab-pane>
+            </el-tabs>
+            <div class="useLifeBtn">
+              <el-button v-if="rightBtnShow" class="editBtn">编辑</el-button>
+              <el-button v-if="rightBtnShow" class="saveBtn">保存</el-button>
+              <el-button v-if="rightBtnShow" class="cancelBtn">取消</el-button>
+              <el-button v-if="rightBtnShow" class="exportBtn">导出</el-button>
+              <el-button type="text" @click="changeShowState">{{ hideOrShow }}</el-button>
+            </div>
+          </div>
           <div class="enjoyContent" v-if="enjoyShow">
             <div class="container">
               <div index_roll="1">看剧</div>
@@ -315,10 +534,14 @@
 
 <script>
 import $ from 'jquery';
+import Kanban from "@/components/Kanban";
 var appData = require('../../server/hotSearch.json');
 
 export default {
   name: 'Index',
+  components: {
+    Kanban
+  },
   data () {
     return {
       title: '凡人修仙站',
@@ -347,6 +570,18 @@ export default {
       timeAttention:'注： 1h <= 总时长 <= 3h',
       currentDo:'',
       textarea:'',
+      textarea1:'',
+      textarea2:'',
+      textarea3:'',
+      textarea4:'',
+      textarea5:'',
+      textarea6:'',
+      textarea7:'',
+      textarea8:'',
+      textarea9:'',
+      textarea10:'',
+      textarea11:'',
+      textarea12:'',
       hideOrShow:'show',
       rightBtnShow:false,
       todayGoal:'',
@@ -418,7 +653,61 @@ export default {
           value:'已完成',
           label:'已完成'
         }
-      ]
+      ],
+      todayContent:'',
+      newToDo:'',
+      linkItems:[
+        {
+          link:'http://www.baidu.com/',
+          content:'baidu'
+        },
+        {
+          link:'https://cn.bing.com/',
+          content:'bing'
+        },
+        {
+          link:'https://www.cnblogs.com/huangbinlooksgood/',
+          content:'cnblogs'
+        },
+        {
+          link:'https://cn.vuejs.org/',
+          content:'vue'
+        },
+        {
+          link:'https://element.eleme.cn/#/zh-CN',
+          content:'element-ui'
+        },
+        {
+          link:'https://www.angularjs.net.cn/',
+          content:'angularjs'
+        },
+        {
+          link:'http://ngx-bootstrap.com/#/getting-started',
+          content:'ngx-bootstrap'
+        },
+        {
+          link:'https://translate.google.cn/',
+          content:'translate'
+        },
+        {
+          link:'http://www.bejson.com/',
+          content:'jsonformat'
+        },
+        {
+          link:'https://www.sioe.cn/yingyong/yanse-rgb-16/',
+          content:'color'
+        },
+        {
+          link:'https://tool.oschina.net/regex/',
+          content:'rejex'
+        }
+      ],
+      group: "mission",
+      list1: [],
+      list2: [],
+      list3: [],
+      taskId: 0,
+      tabPosition:'left'
     }
   },
   created(){
@@ -738,13 +1027,24 @@ export default {
     },
     handleEdit(param){
       window.open(param.link);
+    },
+    addTask(){
+      var temp = {};
+      temp.id = this.taskId++;
+      temp.value = this.newToDo;
+      this.list1.push(temp);
+    },
+    cleanAllTask(){
+      this.list1 = [];
+      this.list2 = [];
+      this.list3 = [];
     }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
   .index{
     display: flex;
     min-height: 92vh;
@@ -990,12 +1290,12 @@ export default {
     height:95%;
   }
 
-  .enjoyContent{
-    display:flex;
+  .lifeContent{
+    margin:25px 30px 0 30px;
   }
 
-  .bg-purple {
-
+  .enjoyContent{
+    display:flex;
   }
 
   .grid-content {
@@ -1105,4 +1405,89 @@ export default {
     text-align:center;
   }
 
+  .workTop{
+    display:flex;
+    margin-top:5px;
+  }
+
+  .todayContentTitle{
+    font-size:25px;
+    font-weight: bold;
+  }
+  .todayContent{
+    width:1200px;
+    margin-left:15px;
+  }
+
+  .workBottom{
+    margin:15px 10px 0 10px;
+    height:500px;
+    width:320px;
+  }
+
+  .workContentBottom{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .newTask{
+    margin-left:0px;
+    margin-top:10px;
+    width:140px;
+    height:40px;
+  }
+
+  .cleanTask{
+    margin-left:13px;
+    margin-top:10px;
+    width:140px;
+    height:40px;
+  }
+
+  .newTaskContent{
+    width:300px;
+    border:1px solid #DCDFE6;
+    border-radius:4px;
+  }
+
+  .newTaskContent /deep/ .el-input__inner:focus{
+    border:0px;
+  }
+
+  .useLink{ 
+    height:340px;
+    width:300px;
+    margin-top:15px;
+  }
+
+  /deep/ .kanban {
+    &.todo {
+      .board-column-header {
+        background: hsl(231, 81%, 59%);
+      }
+    }
+    &.working {
+      .board-column-header {
+        background: #f9944a;
+      }
+    }
+    &.done {
+      .board-column-header {
+        background: #2ac06d;
+      }
+    }
+  }
+
+  .useLifeBtn{
+    margin:20px 0 0 50px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  #chun,#xia,#qiu,#dong{
+    width:98%;
+    height:220px;
+  }
 </style>
