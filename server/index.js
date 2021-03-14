@@ -26,6 +26,30 @@ const ImportantDate = mongoose.model('ImportantDate', new mongoose.Schema({
     date6: { type: String }
 }))
 
+const StudyData = mongoose.model('StudyData', new mongoose.Schema({
+  todayGoal: { type: String },
+  monthGoal: { type: String },
+  weekGoal: { type: String },
+  yearGoal: { type: String },
+  knowledgeData: { type: Array },
+  actionData: { type: Array }
+}))
+
+const LifeData = mongoose.model('LifeData', new mongoose.Schema({
+  textarea1: { type: String },
+  textarea2: { type: String },
+  textarea3: { type: String },
+  textarea4: { type: String },
+  textarea5: { type: String },
+  textarea6: { type: String },
+  textarea7: { type: String },
+  textarea8: { type: String },
+  textarea9: { type: String },
+  textarea10: { type: String },
+  textarea11: { type: String },
+  textarea12: { type: String }
+}))
+
 app.get('/', async(req,res)=>{
     res.send('index')
 })
@@ -42,10 +66,43 @@ app.delete('/api/importantdate/:id',async(req,res)=>{
     })
 })
 
+app.get('/api/studyData', async(req,res)=>{
+  const studyData = await StudyData.find()
+  res.send(studyData)
+})
+
+app.post('/api/studyData', async(req,res) => {
+    const studyData = await StudyData.create(req.body)
+    res.send(studyData)
+})
+
+app.delete('/api/studyData/:id',async(req,res)=>{
+  await StudyData.findByIdAndDelete(req.params.id)
+  res.send({
+      status:true
+  })
+})
+
+app.get('/api/LifeData', async(req,res)=>{
+  const lifeData = await LifeData.find()
+  res.send(lifeData)
+})
+
+app.post('/api/LifeData', async(req,res) => {
+    const lifeData = await LifeData.create(req.body)
+    res.send(lifeData)
+})
+
+app.delete('/api/lifeData/:id',async(req,res)=>{
+  await LifeData.findByIdAndDelete(req.params.id)
+  res.send({
+      status:true
+  })
+})
 
 app.post('/api/importantdate', async(req,res) => {
-    const importantdate = await ImportantDate.create(req.body)
-    res.send(importantdate)
+  const importantdate = await ImportantDate.create(req.body)
+  res.send(importantdate)
 })
 
 app.listen(3001, ()=> {

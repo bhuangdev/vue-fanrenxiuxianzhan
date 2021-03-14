@@ -18,13 +18,13 @@
         </div>
         <div class="content-middle">
           <div class="studyContent" v-if="studyShow">
-            <!-- <el-form ref="studyform" :model="studyForm" label-width="20px"> -->
+            <el-form ref="studyform" :model="studyForm">
               <el-row :gutter="20">
                 <el-col :span="12">
                   <div class="grid-content">
                     今日目标(日):
                     <div class="goalContent">
-                      <el-input v-model="todayGoal"></el-input>
+                      <el-input v-model="studyForm.todayGoal"></el-input>
                     </div>
                   </div>
                 </el-col>
@@ -32,7 +32,7 @@
                   <div class="grid-content">
                     中期目标(月):
                     <div class="goalContent">
-                      <el-input v-model="monthGoal"></el-input>
+                      <el-input v-model="studyForm.monthGoal"></el-input>
                     </div>
                   </div>
                 </el-col>
@@ -42,7 +42,7 @@
                   <div class="grid-content">
                     近期目标(周):
                     <div class="goalContent">
-                      <el-input v-model="weekGoal"></el-input>
+                      <el-input v-model="studyForm.weekGoal"></el-input>
                     </div>
                   </div>
                 </el-col>
@@ -50,7 +50,7 @@
                   <div class="grid-content">
                     长期目标(年):
                     <div class="goalContent">
-                      <el-input v-model="yearGoal"></el-input>
+                      <el-input v-model="studyForm.yearGoal"></el-input>
                     </div>
                   </div>
                 </el-col>
@@ -60,7 +60,7 @@
                   <div class="grid-content-bottom">
                     <div class="bottomTitle">知识(知):</div>
                     <el-table
-                      :data="knowledgeData" border style="width: 100%">
+                      :data="studyForm.knowledgeData" border style="width: 100%">
                       <el-table-column
                         prop="date"
                         label="内容"
@@ -112,7 +112,7 @@
                   <div class="grid-content-bottom">
                     <div class="bottomTitle">技能(行):</div>
                     <el-table
-                      :data="actionData" border style="width: 100%;">
+                      :data="studyForm.actionData" border style="width: 100%;">
                       <el-table-column
                         prop="date"
                         label="内容"
@@ -163,14 +163,13 @@
               </el-row>
               <el-row :gutter="20">
                 <div class="useBtn">
-                  <el-button v-if="rightBtnShow" class="editBtn">编辑</el-button>
-                  <el-button v-if="rightBtnShow" class="saveBtn">保存</el-button>
-                  <el-button v-if="rightBtnShow" class="cancelBtn">取消</el-button>
-                  <el-button v-if="rightBtnShow" class="exportBtn">导出</el-button>
+                  <el-button v-if="rightBtnShow" class="saveBtn" @click="saveStudyBtn(studyForm._id)">保存</el-button>
+                  <el-button v-if="rightBtnShow" class="cancelBtn" @click="cancelStudyBtn">取消</el-button>
+                  <el-button v-if="rightBtnShow" class="exportBtn" @click="exportStudyBtn">导出</el-button>
                   <el-button type="text" @click="changeShowState">{{ hideOrShow }}</el-button>
                 </div>
               </el-row>
-            <!-- </el-form> -->
+            </el-form>
           </div>
           <div class="workContent" v-if="workShow">
             <el-row :gutter="20">
@@ -239,161 +238,162 @@
             </el-row>
           </div>
           <div class="lifeContent" v-if="lifeShow">
-            <el-tabs :tab-position="tabPosition" style="height: 500px;" >
-              <el-tab-pane label="衣">
-                <el-row :gutter="20">
-                  <el-col :span="12">
-                    <div class="grid-content" id="chun">
-                      <el-input
-                        type="textarea"
-                        :rows="10"
-                        placeholder="春"
-                        v-model="textarea1">
-                      </el-input>
-                    </div>
-                  </el-col>
-                  <el-col :span="12">
-                    <div class="grid-content" id="xia">
-                      <el-input
-                        type="textarea"
-                        :rows="10"
-                        placeholder="夏"
-                        v-model="textarea2">
-                      </el-input>
-                    </div>
-                  </el-col>
-                </el-row>
-                <el-row :gutter="20">
-                  <el-col :span="12">
-                    <div class="grid-content" id="qiu">
-                      <el-input
-                        type="textarea"
-                        :rows="10"
-                        placeholder="秋"
-                        v-model="textarea3">
-                      </el-input>
-                    </div>
-                  </el-col>
-                  <el-col :span="12">
-                    <div class="grid-content" id="dong">
-                      <el-input
-                        type="textarea"
-                        :rows="10"
-                        placeholder="冬"
-                        v-model="textarea4">
-                      </el-input>
-                    </div>
-                  </el-col>
-                </el-row>
-              </el-tab-pane>
-              <el-tab-pane label="食">
-                <el-row>
-                  <el-col :span="24">
-                    <div class="grid-content">
-                      <el-input
-                        type="textarea"
-                        :rows="3"
-                        placeholder="早餐"
-                        v-model="textarea5">
-                      </el-input>
-                    </div>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="24">
-                    <div class="grid-content">
-                      <el-input
-                        type="textarea"
-                        :rows="3"
-                        placeholder="午餐"
-                        v-model="textarea6">
-                      </el-input>
-                    </div>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="24">
-                    <div class="grid-content">
-                      <el-input
-                        type="textarea"
-                        :rows="3"
-                        placeholder="晚餐"
-                        v-model="textarea7">
-                      </el-input>
-                    </div>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="24">
-                    <div class="grid-content">
-                      <el-input
-                        type="textarea"
-                        :rows="3"
-                        placeholder="加餐"
-                        v-model="textarea8">
-                      </el-input>
-                    </div>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="24">
-                    <div class="grid-content">
-                      <el-input
-                        type="textarea"
-                        :rows="3"
-                        placeholder="运动"
-                        v-model="textarea9">
-                      </el-input>
-                    </div>
-                  </el-col>
-                </el-row>
-              </el-tab-pane>
-              <el-tab-pane label="住">
-                <el-row>
-                  <el-col :span="24">
-                    <div class="grid-content">
-                      <el-input
-                        type="textarea"
-                        :rows="22"
-                        placeholder="居住计划"
-                        v-model="textarea10">
-                      </el-input>
-                    </div>
-                  </el-col>
-                </el-row>
-              </el-tab-pane>
-              <el-tab-pane label="行">
-                <el-row>
-                  <el-col :span="12">
-                    <div class="grid-content">
-                      <el-input
-                        type="textarea"
-                        :rows="22"
-                        placeholder="旅行计划"
-                        v-model="textarea11">
-                      </el-input>
-                    </div>
-                  </el-col>
-                  <el-col :span="12">
-                    <div class="grid-content">
-                      <el-input
-                        type="textarea"
-                        :rows="22"
-                        placeholder="社交计划"
-                        v-model="textarea12">
-                      </el-input>
-                    </div>
-                  </el-col>
-                </el-row>
-              </el-tab-pane>
-            </el-tabs>
-            <div class="useLifeBtn">
-              <el-button v-if="rightBtnShow" class="editBtn">编辑</el-button>
-              <el-button v-if="rightBtnShow" class="saveBtn">保存</el-button>
-              <el-button v-if="rightBtnShow" class="cancelBtn">取消</el-button>
-              <el-button v-if="rightBtnShow" class="exportBtn">导出</el-button>
-              <el-button type="text" @click="changeShowState">{{ hideOrShow }}</el-button>
-            </div>
+            <el-form ref="lifeForm" :model="lifeForm">
+              <el-tabs :tab-position="tabPosition" style="height: 500px;" >
+                <el-tab-pane label="衣">
+                  <el-row :gutter="20">
+                    <el-col :span="12">
+                      <div class="grid-content" id="chun">
+                        <el-input
+                          type="textarea"
+                          :rows="10"
+                          placeholder="春"
+                          v-model="lifeForm.textarea1">
+                        </el-input>
+                      </div>
+                    </el-col>
+                    <el-col :span="12">
+                      <div class="grid-content" id="xia">
+                        <el-input
+                          type="textarea"
+                          :rows="10"
+                          placeholder="夏"
+                          v-model="lifeForm.textarea2">
+                        </el-input>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row :gutter="20">
+                    <el-col :span="12">
+                      <div class="grid-content" id="qiu">
+                        <el-input
+                          type="textarea"
+                          :rows="10"
+                          placeholder="秋"
+                          v-model="lifeForm.textarea3">
+                        </el-input>
+                      </div>
+                    </el-col>
+                    <el-col :span="12">
+                      <div class="grid-content" id="dong">
+                        <el-input
+                          type="textarea"
+                          :rows="10"
+                          placeholder="冬"
+                          v-model="lifeForm.textarea4">
+                        </el-input>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </el-tab-pane>
+                <el-tab-pane label="食">
+                  <el-row>
+                    <el-col :span="24">
+                      <div class="grid-content">
+                        <el-input
+                          type="textarea"
+                          :rows="3"
+                          placeholder="早餐"
+                          v-model="lifeForm.textarea5">
+                        </el-input>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="24">
+                      <div class="grid-content">
+                        <el-input
+                          type="textarea"
+                          :rows="3"
+                          placeholder="午餐"
+                          v-model="lifeForm.textarea6">
+                        </el-input>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="24">
+                      <div class="grid-content">
+                        <el-input
+                          type="textarea"
+                          :rows="3"
+                          placeholder="晚餐"
+                          v-model="lifeForm.textarea7">
+                        </el-input>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="24">
+                      <div class="grid-content">
+                        <el-input
+                          type="textarea"
+                          :rows="3"
+                          placeholder="加餐"
+                          v-model="lifeForm.textarea8">
+                        </el-input>
+                      </div>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="24">
+                      <div class="grid-content">
+                        <el-input
+                          type="textarea"
+                          :rows="3"
+                          placeholder="运动"
+                          v-model="lifeForm.textarea9">
+                        </el-input>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </el-tab-pane>
+                <el-tab-pane label="住">
+                  <el-row>
+                    <el-col :span="24">
+                      <div class="grid-content">
+                        <el-input
+                          type="textarea"
+                          :rows="22"
+                          placeholder="居住计划"
+                          v-model="lifeForm.textarea10">
+                        </el-input>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </el-tab-pane>
+                <el-tab-pane label="行">
+                  <el-row>
+                    <el-col :span="12">
+                      <div class="grid-content">
+                        <el-input
+                          type="textarea"
+                          :rows="22"
+                          placeholder="旅行计划"
+                          v-model="lifeForm.textarea11">
+                        </el-input>
+                      </div>
+                    </el-col>
+                    <el-col :span="12">
+                      <div class="grid-content">
+                        <el-input
+                          type="textarea"
+                          :rows="22"
+                          placeholder="社交计划"
+                          v-model="lifeForm.textarea12">
+                        </el-input>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </el-tab-pane>
+              </el-tabs>
+              <div class="useLifeBtn">
+                <el-button v-if="rightBtnShow" class="saveBtn" @click="saveLifeBtn(lifeForm._id)">保存</el-button>
+                <el-button v-if="rightBtnShow" class="cancelBtn" @click="cancelLifeBtn">取消</el-button>
+                <el-button v-if="rightBtnShow" class="exportBtn" @click="exportLifeBtn">导出</el-button>
+                <el-button type="text" @click="changeShowState">{{ hideOrShow }}</el-button>
+              </div>
+            </el-form>
           </div>
           <div class="enjoyContent" v-if="enjoyShow">
             <div class="container">
@@ -564,82 +564,87 @@ export default {
         date5:'',
         date6:''
       },
-      studyForm:[],
+      studyForm:{
+        _id:'',
+        todayGoal:'',
+        monthGoal:'',
+        weekGoal:'',
+        yearGoal:'',
+        knowledgeData:[
+          {
+            content1:'',
+            state1:'',
+            content2:'',
+            state2:'',
+          },
+          {
+            content1:'',
+            state1:'',
+            content2:'',
+            state2:'',
+          },
+          {
+            content1:'',
+            state1:'',
+            content2:'',
+            state2:'',
+          },
+          {
+            content1:'',
+            state1:'',
+            content2:'',
+            state2:'',
+          }
+        ],
+        actionData:[
+          {
+            content3:'',
+            state3:'',
+            content4:'',
+            state4:'',
+          },
+          {
+            content3:'',
+            state3:'',
+            content4:'',
+            state4:'',
+          },
+          {
+            content3:'',
+            state3:'',
+            content4:'',
+            state4:'',
+          },
+          {
+            content3:'',
+            state3:'',
+            content4:'',
+            state4:'',
+          }
+        ],
+      },
       currentTimeId:'',
       toDoTableData:[],
       timeAttention:'注： 1h <= 总时长 <= 3h',
       currentDo:'',
+      lifeForm:{
+        _id:'',
+        textarea1:'',
+        textarea2:'',
+        textarea3:'',
+        textarea4:'',
+        textarea5:'',
+        textarea6:'',
+        textarea7:'',
+        textarea8:'',
+        textarea9:'',
+        textarea10:'',
+        textarea11:'',
+        textarea12:'',
+      },
       textarea:'',
-      textarea1:'',
-      textarea2:'',
-      textarea3:'',
-      textarea4:'',
-      textarea5:'',
-      textarea6:'',
-      textarea7:'',
-      textarea8:'',
-      textarea9:'',
-      textarea10:'',
-      textarea11:'',
-      textarea12:'',
       hideOrShow:'show',
       rightBtnShow:false,
-      todayGoal:'',
-      monthGoal:'',
-      weekGoal:'',
-      yearGoal:'',
-      knowledgeData:[
-        {
-          content1:'',
-          state1:'',
-          content2:'',
-          state2:'',
-        },
-        {
-          content1:'',
-          state1:'',
-          content2:'',
-          state2:'',
-        },
-        {
-          content1:'',
-          state1:'',
-          content2:'',
-          state2:'',
-        },
-        {
-          content1:'',
-          state1:'',
-          content2:'',
-          state2:'',
-        }
-      ],
-      actionData:[
-        {
-          content3:'',
-          state3:'',
-          content4:'',
-          state4:'',
-        },
-        {
-          content3:'',
-          state3:'',
-          content4:'',
-          state4:'',
-        },
-        {
-          content3:'',
-          state3:'',
-          content4:'',
-          state4:'',
-        },
-        {
-          content3:'',
-          state3:'',
-          content4:'',
-          state4:'',
-        }
-      ],
       studyOptions:[
         {
           value:'未完成',
@@ -712,6 +717,8 @@ export default {
   },
   created(){
     this.initImportantDateData();
+    this.initStudyDataData();
+    this.initLifeDataData();
   },
   mounted(){
     this.showClock();
@@ -721,6 +728,16 @@ export default {
     initImportantDateData(){
       this.$http.get('importantDate').then(res => {
         this.importantDate = res.data[0];
+      })
+    },
+    initStudyDataData(){
+      this.$http.get('studyData').then(res => {
+        this.studyForm = res.data[0];
+      })
+    },
+    initLifeDataData(){
+      this.$http.get('lifeData').then(res => {
+        this.lifeForm = res.data[0];
       })
     },
     onSubmitImportantDate(param){
@@ -745,6 +762,135 @@ export default {
           this.initImportantDateData();
         })
       }
+    },
+    saveStudyBtn(param){
+      if(param !== ''){
+        this.$http.delete(`studyData/${param}`).then(res => {
+          this.$http.post('studyData',this.studyForm).then(res => {
+            console.log(res.data)
+            this.$message({
+              message: '保存成功！',
+              type: 'success'
+            });
+            this.initStudyDataData();
+          })
+        })
+      }else{
+        this.$http.post('studyData',this.studyForm).then(res => {
+          console.log(res.data)
+          this.$message({
+            message: '保存成功！',
+            type: 'success'
+          });
+          this.initStudyDataData();
+        })
+      }
+    },
+    cancelStudyBtn(){
+      this.studyForm = {
+        _id:'',
+        todayGoal:'',
+        monthGoal:'',
+        weekGoal:'',
+        yearGoal:'',
+        knowledgeData:[
+          {
+            content1:'',
+            state1:'',
+            content2:'',
+            state2:'',
+          },
+          {
+            content1:'',
+            state1:'',
+            content2:'',
+            state2:'',
+          },
+          {
+            content1:'',
+            state1:'',
+            content2:'',
+            state2:'',
+          },
+          {
+            content1:'',
+            state1:'',
+            content2:'',
+            state2:'',
+          }
+        ],
+        actionData:[
+          {
+            content3:'',
+            state3:'',
+            content4:'',
+            state4:'',
+          },
+          {
+            content3:'',
+            state3:'',
+            content4:'',
+            state4:'',
+          },
+          {
+            content3:'',
+            state3:'',
+            content4:'',
+            state4:'',
+          },
+          {
+            content3:'',
+            state3:'',
+            content4:'',
+            state4:'',
+          }
+        ],
+      }
+    },
+    exportStudyBtn(){
+
+    },
+    saveLifeBtn(param){
+      if(param !== ''){
+        this.$http.delete(`lifeData/${param}`).then(res => {
+          this.$http.post('lifeData',this.lifeForm).then(res => {
+            console.log(res.data)
+            this.$message({
+              message: '保存成功！',
+              type: 'success'
+            });
+            this.initLifeDataData();
+          })
+        })
+      }else{
+        this.$http.post('lifeData',this.lifeForm).then(res => {
+          console.log(res.data)
+          this.$message({
+            message: '保存成功！',
+            type: 'success'
+          });
+          this.initLifeDataData();
+        })
+      }
+    },
+    cancelLifeBtn(){
+      this.lifeForm = {
+        textarea1:'',
+        textarea2:'',
+        textarea3:'',
+        textarea4:'',
+        textarea5:'',
+        textarea6:'',
+        textarea7:'',
+        textarea8:'',
+        textarea9:'',
+        textarea10:'',
+        textarea11:'',
+        textarea12:'',
+      }
+    },
+    exportLifeBtn(){
+
     },
     changeShowState(){
       if(this.rightBtnShow){
