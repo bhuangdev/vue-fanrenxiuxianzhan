@@ -8,23 +8,21 @@
 # install dependencies
 npm install
 
+# install node-sass
+npm config set sass_binary_site https://npm.taobao.org/mirrors/node-sass/npm
+npm install node-sass
+
+# install mongodb
+https://www.mongodb.com/try/download/community
+
 # serve with hot reload at localhost:8080
 npm run dev
 
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
+# run nodejs
+cd server
+npm install -g nodemon
+nodemon index.js
 ```
+![Uploading image.png…]()
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
