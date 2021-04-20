@@ -23,6 +23,5 @@ cd server
 npm install -g nodemon
 nodemon index.js
 ```
-![Uploading image.png…]()
 
-
+![image](https://user-images.githubusercontent.com/39610621/115387613-84ba2b80-a20d-11eb-8927-4b197053262d.png)
